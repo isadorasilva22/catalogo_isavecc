@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Inventário | Catálogo de Bichinhos 3D</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/inventario.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="container">
+
+<a href="index.html">
+
+<img src="imagens/logo.png" class="logo">
+
+</a>
+
+<div class="pesquisa">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
+type="text"
+id="pesquisa"
+placeholder="Pesquisar bichinho...">
+
+</div>
+
+</div>
+
+</header>
+
+<main class="layout">
+
+    <aside class="sidebar">
+
+        <h3>Categorias</h3>
+
+        <button class="ativo" data-categoria="Todos">
+            Todos
+        </button>
+
+        <button data-categoria="Cachorros">
+            ?? Cachorros
+        </button>
+
+        <button data-categoria="Gatos">
+            ?? Gatos
+        </button>
+
+        <button data-categoria="Coelhos">
+            ?? Coelhos
+        </button>
+
+        <button data-categoria="Aves">
+            ?? Aves
+        </button>
+
+        <button data-categoria="Outros">
+            ?? Outros
+        </button>
+
+    </aside>
+
+    <section class="conteudo">
+
+        <div class="titulo">
+
+            <h1>Inventário</h1>
+
+            <span id="contador">
+                0 bichinhos
+            </span>
+
+        </div>
+
+        <section id="cards" class="cards"></section>
+
+    </section>
+
+</main>
+
+<div id="modal" class="modal">
+
+<div class="modal-content">
+
+<span id="fechar">&times;</span>
+
+<img id="modalImagem">
+
+<h2 id="modalNome"></h2>
+
+<p>
+
+<strong>Categoria:</strong>
+
+<span id="modalCategoria"></span>
+
+</p>
+
+<p id="modalDescricao"></p>
+
+<div id="modalTags"></div>
+
+</div>
+
+</div>
+
+<script src="js/inventario.js"></script>
+
+</body>
+
+</html>
