@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Administração</title>
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Novo Bichinho</h1>
+
+<form id="formCadastro">
+
+<label>Título</label>
+
+<input
+type="text"
+id="titulo"
+required>
+
+<label>Categoria</label>
+
+<input
+type="text"
+id="categoria"
+required>
+
+<label>Cor</label>
+
+<input
+type="text"
+id="cor"
+required>
+
+<label>Imagem</label>
+
+<input
+type="file"
+id="imagem"
+accept="image/*"
+required>
+
+<img
+id="preview"
+style="display:none;">
+
+<button>
+
+Salvar
+
+</button>
+
+</form>
+
+</div>
+
+<script type="module"
+src="js/admin.js">
+
+</script>
+
+</body>
+
+</html>
