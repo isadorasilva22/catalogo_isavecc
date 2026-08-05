@@ -129,6 +129,7 @@ align-items:center;
 
 .modal-content{
 
+position:relative;
 background:white;
 padding:40px;
 border-radius:25px;
@@ -148,9 +149,12 @@ margin-bottom:20px;
 
 #fechar{
 
-float:right;
+position:absolute;
+top:15px;
+right:20px;
 font-size:35px;
 cursor:pointer;
+z-index:1;
 
 }
 
@@ -196,7 +200,6 @@ border-radius:20px;
     background:none;
     font-size:26px;
     cursor:pointer;
-    float:right;
 
 }
 
