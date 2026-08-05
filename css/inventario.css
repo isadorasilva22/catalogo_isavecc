@@ -129,7 +129,6 @@ align-items:center;
 
 .modal-content{
 
-position:relative;
 background:white;
 padding:40px;
 border-radius:25px;
@@ -147,14 +146,19 @@ margin-bottom:20px;
 
 }
 
+.modal-header{
+
+display:flex;
+justify-content:flex-end;
+margin-bottom:10px;
+
+}
+
 #fechar{
 
-position:absolute;
-top:15px;
-right:20px;
-font-size:35px;
+font-size:30px;
+line-height:1;
 cursor:pointer;
-z-index:1;
 
 }
 
