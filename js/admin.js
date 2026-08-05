@@ -29,6 +29,7 @@ const tituloForm = document.getElementById("tituloForm");
 const botaoSalvar = document.getElementById("btnSalvar");
 const botaoCancelarEdicao = document.getElementById("btnCancelarEdicao");
 const listaBichinhos = document.getElementById("listaBichinhos");
+const nomeArquivo = document.getElementById("nomeArquivo");
 
 const formCategoria = document.getElementById("formCategoria");
 const inputNovaCategoria = document.getElementById("novaCategoria");
@@ -43,12 +44,16 @@ inputImagem.addEventListener("change", () => {
     const arquivo = inputImagem.files[0];
 
     if (!arquivo) {
-        if (!itemEditando) preview.style.display = "none";
+        if (!itemEditando) {
+            preview.style.display = "none";
+            nomeArquivo.textContent = "Nenhum arquivo selecionado";
+        }
         return;
     }
 
     preview.src = URL.createObjectURL(arquivo);
     preview.style.display = "block";
+    nomeArquivo.textContent = arquivo.name;
 
 });
 
@@ -57,6 +62,7 @@ function resetFormParaNovo() {
     form.reset();
     inputImagem.required = true;
     preview.style.display = "none";
+    nomeArquivo.textContent = "Nenhum arquivo selecionado";
     tituloForm.textContent = "Novo Bichinho";
     botaoSalvar.textContent = "Salvar";
     botaoCancelarEdicao.classList.add("oculto");
@@ -69,6 +75,7 @@ function iniciarEdicao(item) {
     inputCor.value = item.cor;
     inputImagem.value = "";
     inputImagem.required = false;
+    nomeArquivo.textContent = "Imagem atual mantida (escolha uma nova para substituir)";
     preview.src = item.imagem;
     preview.style.display = "block";
     tituloForm.textContent = "Editar Bichinho";

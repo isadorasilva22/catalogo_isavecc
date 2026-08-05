@@ -105,6 +105,64 @@ font-weight:bold;
 
 }
 
+.uploadImagem{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+flex-wrap:wrap;
+
+}
+
+.btnUpload{
+
+display:inline-flex;
+
+align-items:center;
+
+gap:8px;
+
+background:#52B8C6;
+
+color:white;
+
+padding:14px 20px;
+
+border-radius:10px;
+
+font-weight:bold;
+
+font-size:15px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.btnUpload:hover{
+
+background:#45a3b0;
+
+}
+
+.nomeArquivo{
+
+font-size:14px;
+
+color:#777;
+
+}
+
+.inputOculto{
+
+display:none;
+
+}
+
 #preview{
 
 margin-top:20px;
@@ -240,6 +298,8 @@ gap:10px;
 .formInline input{
 
 flex:1;
+
+min-width:0;
 
 margin-top:0;
 

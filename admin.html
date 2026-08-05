@@ -11,6 +11,7 @@
 
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="css/responsive.css">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -133,11 +134,23 @@ required>
 
 <label>Imagem</label>
 
+<div class="uploadImagem">
+
+<label for="imagem" class="btnUpload">
+<i class="fa-solid fa-upload"></i>
+Escolher imagem
+</label>
+
+<span id="nomeArquivo" class="nomeArquivo">Nenhum arquivo selecionado</span>
+
 <input
 type="file"
 id="imagem"
 accept="image/*"
+class="inputOculto"
 required>
+
+</div>
 
 <img
 id="preview"
