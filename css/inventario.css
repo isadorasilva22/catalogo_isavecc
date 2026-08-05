@@ -42,6 +42,27 @@ font-size:16px;
 
 }
 
+.btnLogin{
+
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:#52B8C6;
+    color:white;
+    padding:10px 18px;
+    border-radius:12px;
+    font-weight:bold;
+    font-size:14px;
+    transition:.3s;
+
+}
+
+.btnLogin:hover{
+
+    background:#45a3b0;
+
+}
+
 .filtros{
 
 display:flex;
@@ -130,7 +151,7 @@ align-items:center;
 .modal-content{
 
 background:white;
-padding:35px;
+padding:12px;
 border-radius:25px;
 width:545px;
 max-width:90%;
