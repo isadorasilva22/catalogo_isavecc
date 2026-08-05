@@ -154,15 +154,6 @@ cursor:pointer;
 
 }
 
-#modalTags{
-
-margin-top:20px;
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-
-}
-
 .tag{
 
 background:#DDF7FA;
@@ -226,15 +217,6 @@ border-radius:20px;
     display:flex;
     justify-content:space-between;
     margin-top:15px;
-
-}
-
-#modalTags{
-
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin:25px 0;
 
 }
 
@@ -383,5 +365,29 @@ background-position:100% 0;
 background-position:-100% 0;
 
 }
+
+}
+
+.modal-info{
+
+display:flex;
+
+flex-direction:column;
+
+gap:10px;
+
+justify-content:center;
+
+}
+
+.vazio{
+
+grid-column:1 / -1;
+
+text-align:center;
+
+color:#777;
+
+padding:60px 0;
 
 }

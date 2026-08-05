@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Invent·rio | Cat·logo de Bichinhos 3D</title>
+    <title>Invent√°rio | Cat√°logo de Bichinhos 3D</title>
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/inventario.css">
@@ -57,25 +57,7 @@ placeholder="Pesquisar bichinho...">
             Todos
         </button>
 
-        <button data-categoria="Cachorros">
-            ?? Cachorros
-        </button>
-
-        <button data-categoria="Gatos">
-            ?? Gatos
-        </button>
-
-        <button data-categoria="Coelhos">
-            ?? Coelhos
-        </button>
-
-        <button data-categoria="Aves">
-            ?? Aves
-        </button>
-
-        <button data-categoria="Outros">
-            ?? Outros
-        </button>
+        <div id="listaCategoriasFiltro"></div>
 
     </aside>
 
@@ -83,7 +65,7 @@ placeholder="Pesquisar bichinho...">
 
         <div class="titulo">
 
-            <h1>Invent·rio</h1>
+            <h1>Invent√°rio</h1>
 
             <span id="contador">
                 0 bichinhos
@@ -101,23 +83,33 @@ placeholder="Pesquisar bichinho...">
 
 <div class="modal-content">
 
-<span id="fechar">&times;</span>
+<button id="fechar" class="close">&times;</button>
+
+<div class="modal-grid">
+
+<div class="modal-image">
 
 <img id="modalImagem">
 
+</div>
+
+<div class="modal-info">
+
 <h2 id="modalNome"></h2>
 
-<p>
+<span class="categoria-badge" id="modalCategoria"></span>
 
-<strong>Categoria:</strong>
+<div class="info-item">
 
-<span id="modalCategoria"></span>
+<strong>Cor</strong>
 
-</p>
+<span id="modalCor"></span>
 
-<p id="modalDescricao"></p>
+</div>
 
-<div id="modalTags"></div>
+</div>
+
+</div>
 
 </div>
 

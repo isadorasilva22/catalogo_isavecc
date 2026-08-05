@@ -197,12 +197,11 @@ nav a:hover{
 
     background:white;
     border-radius:20px;
-    padding:35px;
+    padding:30px;
     text-align:center;
     box-shadow:0 10px 20px rgba(0,0,0,.05);
     transition:.3s;
     cursor:pointer;
-    font-size:60px;
 
 }
 
@@ -216,7 +215,6 @@ nav a:hover{
 
     display:block;
     font-size:20px;
-    margin-top:15px;
     font-weight:bold;
 
 }

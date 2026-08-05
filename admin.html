@@ -7,22 +7,111 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Administra��o</title>
+<title>Administração</title>
 
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/admin.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 </head>
 
 <body>
 
+<header>
+
 <div class="container">
 
-<h1>Novo Bichinho</h1>
+<a href="index.html">
+<img src="imagens/logo.png" class="logo">
+</a>
+
+<a href="inventario.html" class="verInventario">
+Ver Inventário
+</a>
+
+</div>
+
+</header>
+
+<div class="painelAdmin">
+
+<div id="loginSection">
+
+<h1>Login</h1>
+
+<form id="formLogin">
+
+<label>E-mail</label>
+
+<input
+type="email"
+id="loginEmail"
+required>
+
+<label>Senha</label>
+
+<input
+type="password"
+id="loginSenha"
+required>
+
+<p id="loginErro" class="erro"></p>
+
+<button>
+
+Entrar
+
+</button>
+
+</form>
+
+</div>
+
+<div id="cadastroSection" class="oculto">
+
+<div class="topoAdmin">
+
+<h1 id="tituloForm">Novo Bichinho</h1>
+
+<div class="usuarioBox">
+
+<span id="usuarioLogado"></span>
+
+<button type="button" id="btnLogout" class="logout">
+Sair
+</button>
+
+</div>
+
+</div>
+
+<div class="categoriasSection">
+
+<h2>Categorias</h2>
+
+<form id="formCategoria" class="formInline">
+
+<input
+type="text"
+id="novaCategoria"
+placeholder="Nova categoria"
+required>
+
+<button type="submit">
+Adicionar
+</button>
+
+</form>
+
+<div id="listaCategorias" class="listaCategorias"></div>
+
+</div>
 
 <form id="formCadastro">
 
-<label>T�tulo</label>
+<label>Título</label>
 
 <input
 type="text"
@@ -31,10 +120,9 @@ required>
 
 <label>Categoria</label>
 
-<input
-type="text"
-id="categoria"
-required>
+<select id="categoria" required>
+<option value="" disabled selected>Selecione...</option>
+</select>
 
 <label>Cor</label>
 
@@ -55,20 +143,38 @@ required>
 id="preview"
 style="display:none;">
 
-<button>
+<p id="statusForm"></p>
+
+<div class="acoesForm">
+
+<button type="button" id="btnCancelarEdicao" class="cancelar oculto">
+Cancelar edição
+</button>
+
+<button type="submit" id="btnSalvar">
 
 Salvar
 
 </button>
 
+</div>
+
 </form>
+
+<div class="listaWrapper">
+
+<h2>Bichinhos cadastrados</h2>
+
+<div id="listaBichinhos" class="listaBichinhos"></div>
 
 </div>
 
-<script type="module"
-src="js/admin.js">
+</div>
 
-</script>
+</div>
+
+<script type="module" src="js/auth.js"></script>
+<script type="module" src="js/admin.js"></script>
 
 </body>
 
