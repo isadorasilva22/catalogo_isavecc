@@ -122,9 +122,18 @@ required>
 
 <label>Categoria</label>
 
-<select id="categoria" required>
-<option value="" disabled selected>Selecione...</option>
-</select>
+<div class="campoSeletor">
+
+<input
+type="text"
+id="categoria"
+placeholder="Selecione uma categoria..."
+readonly
+required>
+
+<i class="fa-solid fa-chevron-down"></i>
+
+</div>
 
 <label>Cor</label>
 
@@ -180,6 +189,50 @@ Salvar
 <h2>Bichinhos cadastrados</h2>
 
 <div id="listaBichinhos" class="listaBichinhos"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="modalCategorias" class="modalConfirmacao">
+
+<div class="modalConfirmacaoContent modalCategoriasContent">
+
+<h3>Selecionar categoria</h3>
+
+<div id="listaCategoriasModal" class="listaCategoriasModal"></div>
+
+<div class="modalConfirmacaoAcoes">
+
+<button type="button" id="btnFecharModalCategorias" class="cancelar">
+Fechar
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="modalConfirmacao" class="modalConfirmacao">
+
+<div class="modalConfirmacaoContent">
+
+<h3 id="modalConfirmacaoTitulo">Confirmar exclusão</h3>
+
+<p id="modalConfirmacaoTexto"></p>
+
+<div class="modalConfirmacaoAcoes">
+
+<button type="button" id="btnCancelarConfirmacao" class="cancelar">
+Cancelar
+</button>
+
+<button type="button" id="btnConfirmarExclusao" class="confirmarExclusao">
+Excluir
+</button>
 
 </div>
 

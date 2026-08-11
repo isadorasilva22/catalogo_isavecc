@@ -12,16 +12,19 @@ const contador = document.getElementById("contador");
 const inputPesquisa = document.getElementById("pesquisa");
 const sidebar = document.querySelector(".sidebar");
 const listaCategoriasFiltro = document.getElementById("listaCategoriasFiltro");
+const btnFiltroFavoritos = document.getElementById("btnFiltroFavoritos");
 
 const modal = document.getElementById("modal");
 const fechar = document.getElementById("fechar");
 const modalImagem = document.getElementById("modalImagem");
 const modalNome = document.getElementById("modalNome");
 const modalCategoria = document.getElementById("modalCategoria");
+const modalFavorito = document.getElementById("modalFavorito");
 const modalCor = document.getElementById("modalCor");
 
 let todosBichinhos = [];
 let categoriaAtiva = "Todos";
+let apenasFavoritos = false;
 let termoPesquisa = "";
 
 const removerAcentos = new RegExp("[" + String.fromCharCode(0x300) + "-" + String.fromCharCode(0x36f) + "]", "g");
@@ -44,6 +47,7 @@ function renderCards(lista) {
             <img src="${b.imagem}" alt="${b.titulo}">
             <h3>${b.titulo}</h3>
             <span>${b.categoria}</span>
+            ${b.favorito ? '<span class="favoritoTag"><i class="fa-solid fa-star"></i> Favorito</span>' : ""}
         </div>
     `).join("");
 
@@ -55,6 +59,10 @@ function aplicarFiltros() {
 
     if (categoriaAtiva !== "Todos") {
         filtrados = filtrados.filter((b) => b.categoria === categoriaAtiva);
+    }
+
+    if (apenasFavoritos) {
+        filtrados = filtrados.filter((b) => b.favorito);
     }
 
     if (termoPesquisa) {
@@ -80,6 +88,7 @@ function abrirModal(bichinho) {
     modalImagem.alt = bichinho.titulo;
     modalNome.textContent = bichinho.titulo;
     modalCategoria.textContent = bichinho.categoria;
+    modalFavorito.style.display = bichinho.favorito ? "flex" : "none";
     modalCor.textContent = bichinho.cor;
     modal.style.display = "flex";
 }
@@ -113,6 +122,12 @@ sidebar.addEventListener("click", (evento) => {
     sidebar.querySelectorAll("button[data-categoria]").forEach((b) => b.classList.remove("ativo"));
     botao.classList.add("ativo");
     categoriaAtiva = botao.dataset.categoria;
+    aplicarFiltros();
+});
+
+btnFiltroFavoritos.addEventListener("click", () => {
+    apenasFavoritos = !apenasFavoritos;
+    btnFiltroFavoritos.classList.toggle("ativo", apenasFavoritos);
     aplicarFiltros();
 });
 

@@ -35,13 +35,81 @@ const formCategoria = document.getElementById("formCategoria");
 const inputNovaCategoria = document.getElementById("novaCategoria");
 const listaCategorias = document.getElementById("listaCategorias");
 
+const modalConfirmacao = document.getElementById("modalConfirmacao");
+const modalConfirmacaoTexto = document.getElementById("modalConfirmacaoTexto");
+const btnCancelarConfirmacao = document.getElementById("btnCancelarConfirmacao");
+const btnConfirmarExclusao = document.getElementById("btnConfirmarExclusao");
+
+const modalCategorias = document.getElementById("modalCategorias");
+const listaCategoriasModal = document.getElementById("listaCategoriasModal");
+const btnFecharModalCategorias = document.getElementById("btnFecharModalCategorias");
+
 let itemEditando = null;
 let itensAtuais = [];
 let categoriasAtuais = [];
+let uploadPendente = null;
 
-inputImagem.addEventListener("change", () => {
+function confirmarAcao(mensagem) {
+
+    return new Promise((resolve) => {
+
+        modalConfirmacaoTexto.textContent = mensagem;
+        modalConfirmacao.style.display = "flex";
+
+        function limpar(resultado) {
+            modalConfirmacao.style.display = "none";
+            btnConfirmarExclusao.removeEventListener("click", aoConfirmar);
+            btnCancelarConfirmacao.removeEventListener("click", aoCancelar);
+            modalConfirmacao.removeEventListener("click", aoClicarFora);
+            document.removeEventListener("keydown", aoTeclar);
+            resolve(resultado);
+        }
+
+        function aoConfirmar() { limpar(true); }
+        function aoCancelar() { limpar(false); }
+        function aoClicarFora(evento) {
+            if (evento.target === modalConfirmacao) limpar(false);
+        }
+        function aoTeclar(evento) {
+            if (evento.key === "Escape") limpar(false);
+        }
+
+        btnConfirmarExclusao.addEventListener("click", aoConfirmar);
+        btnCancelarConfirmacao.addEventListener("click", aoCancelar);
+        modalConfirmacao.addEventListener("click", aoClicarFora);
+        document.addEventListener("keydown", aoTeclar);
+
+    });
+
+}
+
+function mensagemErro(erro, acao) {
+
+    if (!navigator.onLine) {
+        return "Sem conexão com a internet. Verifique sua rede e tente novamente.";
+    }
+
+    if (erro?.message?.includes("Cloudinary")) {
+        return "Não foi possível enviar a imagem. Verifique o arquivo e tente novamente.";
+    }
+
+    switch (erro?.code) {
+        case "permission-denied":
+            return "Você não tem permissão para essa ação. Faça login novamente.";
+        case "unavailable":
+            return "Não foi possível conectar ao banco de dados. Tente novamente em alguns instantes.";
+        case "not-found":
+            return "Este item não foi encontrado — ele pode já ter sido excluído.";
+    }
+
+    return `Erro ao ${acao}. Tente novamente.`;
+
+}
+
+inputImagem.addEventListener("change", async () => {
 
     const arquivo = inputImagem.files[0];
+    uploadPendente = null;
 
     if (!arquivo) {
         if (!itemEditando) {
@@ -51,14 +119,38 @@ inputImagem.addEventListener("change", () => {
         return;
     }
 
+    nomeArquivo.textContent = arquivo.name;
     preview.src = URL.createObjectURL(arquivo);
     preview.style.display = "block";
-    nomeArquivo.textContent = arquivo.name;
+    status.textContent = "Enviando imagem e removendo fundo...";
+    botaoSalvar.disabled = true;
+
+    try {
+
+        const resultadoUpload = await uploadImagem(arquivo);
+
+        uploadPendente = {
+            imagem: removerFundo(resultadoUpload.secure_url),
+            imagemOriginal: resultadoUpload.secure_url,
+            publicId: resultadoUpload.public_id
+        };
+
+        preview.src = uploadPendente.imagem;
+        status.textContent = "Pré-visualização atualizada. Confira o resultado antes de salvar.";
+
+    } catch (erro) {
+        console.error(erro);
+        status.textContent = mensagemErro(erro, "enviar a imagem");
+        uploadPendente = null;
+    } finally {
+        botaoSalvar.disabled = false;
+    }
 
 });
 
 function resetFormParaNovo() {
     itemEditando = null;
+    uploadPendente = null;
     form.reset();
     inputImagem.required = true;
     preview.style.display = "none";
@@ -70,6 +162,7 @@ function resetFormParaNovo() {
 
 function iniciarEdicao(item) {
     itemEditando = item;
+    uploadPendente = null;
     inputTitulo.value = item.titulo;
     inputCategoria.value = item.categoria;
     inputCor.value = item.cor;
@@ -92,15 +185,30 @@ botaoCancelarEdicao.addEventListener("click", () => {
 
 async function excluirBichinho(id) {
 
-    if (!confirm("Excluir este bichinho? Essa ação não pode ser desfeita.")) {
-        return;
+    const confirmado = await confirmarAcao("Excluir este bichinho? Essa ação não pode ser desfeita.");
+    if (!confirmado) return;
+
+    try {
+
+        await deleteDoc(doc(db, "bichinhosisavecc", id));
+
+        if (itemEditando?.id === id) {
+            resetFormParaNovo();
+        }
+
+    } catch (erro) {
+        console.error(erro);
+        alert(mensagemErro(erro, "excluir o bichinho"));
     }
 
-    await deleteDoc(doc(db, "bichinhosisavecc", id));
+}
 
-    if (itemEditando?.id === id) {
-        resetFormParaNovo();
-    }
+async function alternarFavorito(id) {
+
+    const item = itensAtuais.find((i) => i.id === id);
+    if (!item) return;
+
+    await updateDoc(doc(db, "bichinhosisavecc", id), { favorito: !item.favorito });
 
 }
 
@@ -119,6 +227,9 @@ function renderLista(itens) {
                 <span>${item.categoria} · ${item.cor}</span>
             </div>
             <div class="acoesItem">
+                <button type="button" class="btnFavorito${item.favorito ? " ativo" : ""}" data-id="${item.id}" title="${item.favorito ? "Remover dos favoritos" : "Marcar como favorito"}">
+                    <i class="fa-${item.favorito ? "solid" : "regular"} fa-star"></i>
+                </button>
                 <button type="button" class="btnEditar" data-id="${item.id}" title="Editar">
                     <i class="fa-solid fa-pen"></i>
                 </button>
@@ -131,20 +242,71 @@ function renderLista(itens) {
 
 }
 
-function renderSelectCategorias() {
+function sincronizarCategoriaAtual() {
 
-    const valorAtual = inputCategoria.value;
-
-    inputCategoria.innerHTML = '<option value="" disabled>Selecione...</option>' +
-        categoriasAtuais.map((c) => `<option value="${c.nome}">${c.nome}</option>`).join("");
-
-    if (categoriasAtuais.some((c) => c.nome === valorAtual)) {
-        inputCategoria.value = valorAtual;
-    } else {
+    if (inputCategoria.value && !categoriasAtuais.some((c) => c.nome === inputCategoria.value)) {
         inputCategoria.value = "";
     }
 
 }
+
+function renderListaCategoriasModal() {
+
+    if (categoriasAtuais.length === 0) {
+        listaCategoriasModal.innerHTML = '<p class="vazioLista">Nenhuma categoria cadastrada ainda.</p>';
+        return;
+    }
+
+    listaCategoriasModal.innerHTML = categoriasAtuais.map((c) => `
+        <button type="button" class="itemCategoriaModal${c.nome === inputCategoria.value ? " ativo" : ""}" data-nome="${c.nome}">
+            ${c.nome}
+            ${c.nome === inputCategoria.value ? '<i class="fa-solid fa-check"></i>' : ""}
+        </button>
+    `).join("");
+
+}
+
+function abrirModalCategorias() {
+    renderListaCategoriasModal();
+    modalCategorias.style.display = "flex";
+}
+
+function fecharModalCategorias() {
+    modalCategorias.style.display = "none";
+}
+
+inputCategoria.addEventListener("focus", () => inputCategoria.blur());
+
+inputCategoria.addEventListener("click", abrirModalCategorias);
+
+inputCategoria.addEventListener("keydown", (evento) => {
+    if (evento.key === "Enter" || evento.key === " ") {
+        evento.preventDefault();
+        abrirModalCategorias();
+    }
+});
+
+btnFecharModalCategorias.addEventListener("click", fecharModalCategorias);
+
+modalCategorias.addEventListener("click", (evento) => {
+    if (evento.target === modalCategorias) fecharModalCategorias();
+});
+
+document.addEventListener("keydown", (evento) => {
+    if (evento.key === "Escape" && modalCategorias.style.display === "flex") {
+        fecharModalCategorias();
+    }
+});
+
+listaCategoriasModal.addEventListener("click", (evento) => {
+
+    const botao = evento.target.closest(".itemCategoriaModal");
+    if (!botao) return;
+
+    inputCategoria.value = botao.dataset.nome;
+    fecharModalCategorias();
+
+});
 
 function renderListaCategorias() {
 
@@ -183,11 +345,15 @@ listaCategorias.addEventListener("click", async (evento) => {
     const botao = evento.target.closest(".btnExcluirCategoria");
     if (!botao) return;
 
-    if (!confirm("Excluir esta categoria? Bichinhos já cadastrados com ela não serão apagados.")) {
-        return;
-    }
+    const confirmado = await confirmarAcao("Excluir esta categoria? Bichinhos já cadastrados com ela não serão apagados.");
+    if (!confirmado) return;
 
-    await deleteDoc(doc(db, "categorias", botao.dataset.id));
+    try {
+        await deleteDoc(doc(db, "categorias", botao.dataset.id));
+    } catch (erro) {
+        console.error(erro);
+        alert(mensagemErro(erro, "excluir a categoria"));
+    }
 
 });
 
@@ -195,8 +361,11 @@ onSnapshot(
     query(colecaoCategorias, orderBy("nome")),
     (snapshot) => {
         categoriasAtuais = snapshot.docs.map((documento) => ({ id: documento.id, ...documento.data() }));
-        renderSelectCategorias();
+        sincronizarCategoriaAtual();
         renderListaCategorias();
+        if (modalCategorias.style.display === "flex") {
+            renderListaCategoriasModal();
+        }
     },
     (erro) => {
         console.error(erro);
@@ -220,6 +389,7 @@ listaBichinhos.addEventListener("click", (evento) => {
 
     const botaoEditar = evento.target.closest(".btnEditar");
     const botaoExcluir = evento.target.closest(".btnExcluir");
+    const botaoFavorito = evento.target.closest(".btnFavorito");
 
     if (botaoEditar) {
         const item = itensAtuais.find((i) => i.id === botaoEditar.dataset.id);
@@ -228,6 +398,10 @@ listaBichinhos.addEventListener("click", (evento) => {
 
     if (botaoExcluir) {
         excluirBichinho(botaoExcluir.dataset.id);
+    }
+
+    if (botaoFavorito) {
+        alternarFavorito(botaoFavorito.dataset.id);
     }
 
 });
@@ -246,8 +420,13 @@ form.addEventListener("submit", async (evento) => {
         return;
     }
 
+    if (arquivo && !uploadPendente) {
+        status.textContent = "Aguarde o envio da imagem terminar antes de salvar.";
+        return;
+    }
+
     botaoSalvar.disabled = true;
-    status.textContent = itemEditando ? "Atualizando..." : "Enviando imagem...";
+    status.textContent = itemEditando ? "Atualizando..." : "Salvando...";
 
     try {
 
@@ -257,11 +436,10 @@ form.addEventListener("submit", async (evento) => {
             cor: inputCor.value
         };
 
-        if (arquivo) {
-            const resultadoUpload = await uploadImagem(arquivo);
-            dados.imagem = removerFundo(resultadoUpload.secure_url);
-            dados.imagemOriginal = resultadoUpload.secure_url;
-            dados.publicId = resultadoUpload.public_id;
+        if (uploadPendente) {
+            dados.imagem = uploadPendente.imagem;
+            dados.imagemOriginal = uploadPendente.imagemOriginal;
+            dados.publicId = uploadPendente.publicId;
         }
 
         if (itemEditando) {
@@ -277,7 +455,7 @@ form.addEventListener("submit", async (evento) => {
 
     } catch (erro) {
         console.error(erro);
-        status.textContent = "Erro ao salvar. Tente novamente.";
+        status.textContent = mensagemErro(erro, itemEditando ? "atualizar o bichinho" : "salvar o bichinho");
     } finally {
         botaoSalvar.disabled = false;
     }
