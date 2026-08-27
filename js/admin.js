@@ -30,6 +30,7 @@ const botaoSalvar = document.getElementById("btnSalvar");
 const botaoCancelarEdicao = document.getElementById("btnCancelarEdicao");
 const listaBichinhos = document.getElementById("listaBichinhos");
 const nomeArquivo = document.getElementById("nomeArquivo");
+const inputPesquisaAdmin = document.getElementById("pesquisaAdmin");
 
 const formCategoria = document.getElementById("formCategoria");
 const inputNovaCategoria = document.getElementById("novaCategoria");
@@ -48,6 +49,13 @@ let itemEditando = null;
 let itensAtuais = [];
 let categoriasAtuais = [];
 let uploadPendente = null;
+let termoPesquisaAdmin = "";
+
+const removerAcentos = new RegExp("[" + String.fromCharCode(0x300) + "-" + String.fromCharCode(0x36f) + "]", "g");
+
+function normalizar(texto) {
+    return texto.toLowerCase().normalize("NFD").replace(removerAcentos, "");
+}
 
 function confirmarAcao(mensagem) {
 
@@ -242,6 +250,23 @@ function renderLista(itens) {
 
 }
 
+function aplicarFiltroLista() {
+
+    let filtrados = itensAtuais;
+
+    if (termoPesquisaAdmin) {
+        filtrados = filtrados.filter((item) => normalizar(item.titulo).includes(termoPesquisaAdmin));
+    }
+
+    renderLista(filtrados);
+
+}
+
+inputPesquisaAdmin.addEventListener("input", () => {
+    termoPesquisaAdmin = normalizar(inputPesquisaAdmin.value.trim());
+    aplicarFiltroLista();
+});
+
 function sincronizarCategoriaAtual() {
 
     if (inputCategoria.value && !categoriasAtuais.some((c) => c.nome === inputCategoria.value)) {
@@ -374,10 +399,10 @@ onSnapshot(
 );
 
 onSnapshot(
-    query(colecao, orderBy("criadoEm", "desc")),
+    query(colecao, orderBy("titulo")),
     (snapshot) => {
         itensAtuais = snapshot.docs.map((documento) => ({ id: documento.id, ...documento.data() }));
-        renderLista(itensAtuais);
+        aplicarFiltroLista();
     },
     (erro) => {
         console.error(erro);

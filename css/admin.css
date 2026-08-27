@@ -381,11 +381,59 @@ margin-top:50px;
 
 }
 
-.listaWrapper h2{
+.topoLista{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+flex-wrap:wrap;
+
+gap:15px;
 
 margin-bottom:20px;
 
+}
+
+.topoLista h2{
+
+margin:0;
+
 font-size:20px;
+
+}
+
+.pesquisa{
+
+display:flex;
+
+align-items:center;
+
+background:#f5f5f5;
+
+padding:10px 18px;
+
+border-radius:50px;
+
+gap:10px;
+
+width:260px;
+
+}
+
+.pesquisa input{
+
+border:none;
+
+outline:none;
+
+background:none;
+
+width:100%;
+
+font-size:15px;
 
 }
 
